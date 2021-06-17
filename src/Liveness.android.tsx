@@ -31,7 +31,7 @@ interface FaceDetection {
 
 const detections = {
   BLINK: { promptText: "Blink both eyes", minProbability: 0.4 },
-  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -7.5 },
+  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -7.5 },//-7.5  new val 344
   TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 7.5 },
   NOD: { promptText: "Nod", minDiff: 1 },
   SMILE: { promptText: "Smile", minProbability: 0.7 }
@@ -63,19 +63,23 @@ const initialState = {
 
 export default function Liveness() {
   const navigation = useNavigation()
-  const [hasPermission, setHasPermission] = useState(false)
+  const [hasPermission, setHasPermission] = useState(true)
   const [state, dispatch] = useReducer(detectionReducer, initialState)
   const rollAngles = useRef<number[]>([])
   const rect = useRef<View>(null)
 
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const { status } = await Camera.requestPermissionsAsync()
-      setHasPermission(status === "granted")
-    }
+  // useEffect(() => {
+  //   const requestPermissions = async () => {
+  //     const { status } = await Camera.requestPermissionsAsync()
+  //     setHasPermission(status === "granted")
+  //   }
 
-    requestPermissions()
-  }, [])
+  //   requestPermissions()
+  //   // (async () => {
+  //   //   const { status } = await Camera.requestPermissionsAsync(); //requestPermissionsAsync
+  //   //   setHasPermission(status === "granted");
+  //   // })();
+  // }, [])
 
   const drawFaceRect = (face: FaceDetection) => {
     rect.current?.setNativeProps({
@@ -92,6 +96,8 @@ export default function Liveness() {
       return
     }
 
+
+
     const face: FaceDetection = result.faces[0]
 
     // offset used to get the center of the face, instead of top left corner
@@ -105,6 +111,9 @@ export default function Liveness() {
     face.bounds.origin.y: ${face.bounds.origin.y}
 
     `)
+
+    console.log("Yaw Angle", face.yawAngle);
+    
     if (
       // if middle of face is outside the preview towards the top
       faceMidYPoint <= PREVIEW_MARGIN_TOP ||
@@ -181,7 +190,8 @@ export default function Liveness() {
         return
       case "TURN_HEAD_LEFT":
         // console.log("TURN_HEAD_LEFT " + face.yawAngle)
-        if (face.yawAngle <= detections.TURN_HEAD_LEFT.maxAngle) {
+        //  <=
+        if (face.yawAngle != detections.TURN_HEAD_LEFT.maxAngle) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
         return
@@ -197,15 +207,22 @@ export default function Liveness() {
         if (face.smilingProbability >= detections.SMILE.minProbability) {
           dispatch({ type: "NEXT_DETECTION", value: null })
         }
+
+
         return
+
+                // alert("Successfully Detected Human")
+
     }
+
   }
 
   useEffect(() => {
     if (state.processComplete) {
       setTimeout(() => {
         // delay so we can see progress fill aniamtion (500ms)
-        navigation.goBack()
+        navigation.navigate("Detected")
+        alert("Liveness Detected Successfully")
       }, 750)
     }
   }, [state.processComplete])

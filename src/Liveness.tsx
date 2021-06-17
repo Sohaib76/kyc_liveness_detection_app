@@ -262,7 +262,7 @@ export default function Liveness() {
   React.useEffect(() => {
     if (state.processComplete) {
       setTimeout(() => {
-        navigation.goBack()
+        navigation.navigate("Detected")
         // enough delay for the final progress fill animation.
       }, 500)
     }
