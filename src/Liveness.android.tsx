@@ -29,11 +29,20 @@ interface FaceDetection {
   }
 }
 
+// const detections = {
+//   BLINK: { promptText: "Blink both eyes", minProbability: 0.4 },
+//   TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -7.5 },//-7.5  new val 344
+//   TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 7.5 },
+//   NOD: { promptText: "Nod", minDiff: 1 },
+//   SMILE: { promptText: "Smile", minProbability: 0.7 }
+// }
+
+
 const detections = {
-  BLINK: { promptText: "Blink both eyes", minProbability: 0.4 },
-  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -7.5 },//-7.5  new val 344
-  TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 7.5 },
-  NOD: { promptText: "Nod", minDiff: 1 },
+  BLINK: { promptText: "Blink both eyes", minProbability: 0.3 },
+  TURN_HEAD_LEFT: { promptText: "Turn head left", maxAngle: -15 },
+  TURN_HEAD_RIGHT: { promptText: "Turn head right", minAngle: 15 },
+  NOD: { promptText: "Nod", minDiff: 1.5 },
   SMILE: { promptText: "Smile", minProbability: 0.7 }
 }
 
